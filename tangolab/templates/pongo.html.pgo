@@ -1,0 +1,24 @@
+<html><head><title>Our admins and users</title></head>
+{# This is a short example to give you a quick overview of pongo2's syntax. #}
+
+{% macro user_details(user) %}
+    <div class="user_item">
+        <!-- Let's indicate a user's good karma -->
+        <h2>
+            <!-- This will call user.String() automatically if available: -->
+            {{ user }}
+        </h2>
+
+    </div>
+{% endmacro %}
+
+<body>
+    <!-- Make use of the macro defined above to avoid repetitive HTML code
+         since we want to use the same code for admins AND members -->
+
+    <h1>Our members</h1>
+    {% for user in users %}
+        {{ user_details(user) }}
+    {% endfor %}
+</body>
+</html>
