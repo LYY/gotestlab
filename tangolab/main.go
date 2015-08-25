@@ -35,6 +35,14 @@ func (a *PongoAction) Get() error {
 	return a.Render("pongo.html.pgo", data)
 }
 
+type StringAction struct {
+	tango.Ctx
+}
+
+func (a *StringAction) Get() string {
+	return "hello girl"
+}
+
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	logger := log.New(os.Stdout, "[tango] ", log.Ldefault())
@@ -42,5 +50,6 @@ func main() {
 	t.Use(tpongo2.New())
 	t.Get("/json", new(JsonAction))
 	t.Get("/pongo", new(PongoAction))
+	t.Get("/string", new(StringAction))
 	t.Run(":8001")
 }

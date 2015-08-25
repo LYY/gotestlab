@@ -8,6 +8,18 @@ import (
 	"runtime"
 )
 
+func PongoGet(ctx *echo.Context) error {
+	users := InitUsers()
+	data := map[string]interface{}{
+		"users": users,
+	}
+	return ctx.Render(200, "pongo.html.pgo", data)
+}
+
+func StringGet(ctx *echo.Context) error {
+	return ctx.String(200, "%s", "hello girl")
+}
+
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	serv := echo.New()
@@ -15,14 +27,8 @@ func main() {
 	serv.Use(middleware.Recover())
 	r := pongor.GetRenderer()
 	serv.SetRenderer(r)
-	serv.Get("/pongo", func(ctx *echo.Context) error {
-		users := InitUsers()
-		data := map[string]interface{}{
-			"users": users,
-		}
-		ctx.Render(200, "pongo.html.pgo", data)
-		return nil
-	})
+	serv.Get("/pongo", PongoGet)
+	serv.Get("/string", StringGet)
 
 	serv.Run(":8002")
 }
