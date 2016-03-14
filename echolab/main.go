@@ -4,20 +4,27 @@ import (
 	. "github.com/LYY/gotestlab/labcomm"
 	"github.com/echo-contrib/pongor"
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/engine/standard"
+	// "github.com/labstack/echo/engine/fasthttp"
 	"github.com/labstack/echo/middleware"
 	"runtime"
 )
 
-func PongoGet(ctx *echo.Context) error {
-	users := InitUsers()
-	data := map[string]interface{}{
-		"users": users,
+// Handler
+func PongoGetHandler() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		users := InitUsers()
+		data := map[string]interface{}{
+			"users": users,
+		}
+		return c.Render(200, "pongo.html.pgo", data)
 	}
-	return ctx.Render(200, "pongo.html.pgo", data)
 }
 
-func StringGet(ctx *echo.Context) error {
-	return ctx.String(200, "%s", "hello girl")
+func StringHandler() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		return c.String(200, "hello girl")
+	}
 }
 
 func main() {
@@ -27,8 +34,9 @@ func main() {
 	serv.Use(middleware.Recover())
 	r := pongor.GetRenderer()
 	serv.SetRenderer(r)
-	serv.Get("/pongo", PongoGet)
-	serv.Get("/string", StringGet)
+	serv.Get("/pongo", PongoGetHandler())
+	serv.Get("/string", StringHandler())
 
-	serv.Run(":8002")
+	serv.Run(standard.New(":8002"))
+	// serv.Run(fasthttp.New(":8002"))
 }
